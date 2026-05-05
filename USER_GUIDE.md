@@ -346,6 +346,84 @@ assumptions.
 Each chart has a small pop-out button in the top-right that opens it in a new
 window. Useful for screenshots or side-by-side comparisons.
 
+### Monte Carlo fan chart
+When you run a Monte Carlo simulation (see the Monte Carlo section below), the
+*Portfolio over time* chart gains translucent percentile bands showing where your
+balance is likely to land across thousands of randomized trials. The wider light
+band marks the 5th–95th percentile range; the darker inner band marks the 25th–75th.
+A dashed line plots the median trial. The deterministic projection lines stay
+on top so you can compare the single-line estimate to the distribution. Bands
+automatically disappear when you change any input (results would be stale
+relative to the new scenario); re-run Monte Carlo to refresh them.
+
+## Monte Carlo simulation
+
+The deterministic projection assumes every account earns its growth rate exactly,
+every year, forever. Real markets don't work that way — a bad sequence of returns
+early in retirement can deplete a portfolio that would have survived comfortably
+with the same long-term *average* return spread differently across years. This is
+called **sequence-of-returns risk**, and it's the single biggest blind spot of
+any single-line retirement projection.
+
+Monte Carlo simulation tackles this by running your scenario thousands of times
+with randomized returns each year, then summarizing the distribution of
+outcomes. It's optional and opt-in — you have to click *Run Monte Carlo* in the
+panel below the projection charts. Until then, the planner shows only the
+deterministic line, just as before.
+
+### How to read it
+- **Success rate** — the percentage of trials in which your portfolio never ran
+  out of money during retirement. 90%+ is generally considered a solid plan;
+  75–89% is workable but worth pressure-testing; below 75% suggests you should
+  retire later, save more, or spend less.
+- **Fan chart bands** on the *Portfolio over time* chart — the wide light band
+  is the 5th–95th percentile range (90% of trials land inside it), the darker
+  inner band is the 25th–75th (the middle half of trials), and the dashed line
+  is the median trial. The deterministic projection sits on top for direct
+  comparison.
+- **Ending-balance percentile table** — what your portfolio is worth in
+  today's dollars at end-of-plan, sorted by percentile. Compare the 10th
+  (bad outcome) and 90th (good outcome) to gauge the spread.
+- **Depletion-age histogram** — for trials that did run out of money, when did
+  it happen? Failures clustered at the tail end (e.g. age 90+) are far less
+  scary than failures starting in your 70s.
+
+### Volatility input
+Each account has a *Volatility* field (annual return standard deviation). This
+is ignored by the deterministic projection but drives the random sampling in
+Monte Carlo. Sensible defaults per asset class:
+
+- **Stock-heavy growth accounts** (Roth IRA, 401(k), Brokerage): 15% (S&P 500
+  long-run σ is roughly 15–18%)
+- **Bond / mixed accounts**: 5%
+- **Cash / Savings**: 1%
+- **HSA**: 10% (mixed-asset default)
+
+You can override per-account if you have a more specific allocation in mind.
+Setting volatility to 0 makes that account behave deterministically inside the
+Monte Carlo run.
+
+### Trial count
+Default is 1,000 trials, configurable up to 5,000. More trials = smoother
+percentile bands and more stable success-rate estimates, but longer compute
+time. 1,000 is plenty for typical planning; bump to 5,000 if you're stress-testing
+the edges of the distribution.
+
+### Stale results
+Monte Carlo runs in a Web Worker and the results are cached against a hash of
+your inputs. The moment you edit any field, the cached result is flagged
+*Stale* — the fan-chart bands are hidden and the panel shows a stale badge.
+Click *Re-run Monte Carlo* to refresh.
+
+### What the simulation models
+Returns are sampled per account per year from a lognormal distribution centered
+on that account's growth rate (pre-retirement vs post-retirement) with the
+specified sigma. Contributions, salary growth, employer match, withdrawal
+waterfall, Social Security, and inflation all run through the same engine as
+the deterministic projection — only the per-year per-account return is
+randomized. Inflation itself is held at the input value (not stochastic) so
+you're isolating market-return uncertainty.
+
 ## Year-by-year projection table
 
 The table shows one row per year from your current age through your end age.
