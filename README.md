@@ -45,8 +45,8 @@ A user guide is included in [USER_GUIDE.md](./USER_GUIDE.md).
 - Roth 401(k) pre-59.5 withdrawals are currently treated as basis-first like
   Roth IRAs. Real Roth 401(k) plans use pro-rata basis-and-gains; this is on
   the to-do list.
-- Returns are deterministic (single growth rate per account), not
-  Monte Carlo.
+- Returns can be displayed both in as deterministic (single growth rate per account) value, and
+  utilizing volatility percentage based Monte Carlo simulations.
 - US-centric: contribution caps and account types follow US rules.
 
 ## Privacy
