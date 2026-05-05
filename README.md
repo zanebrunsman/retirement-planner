@@ -7,6 +7,15 @@ browser. It is being built iteratively and **should not be used as the basis
 for any real-world financial decision**. Numbers, formulas, and behavior may
 change without notice, and known issues are still being worked on.
 
+> 🤖 **AI-assisted development.** This planner was built with substantial help
+> from AI coding assistants (writing, reviewing, and refactoring source code,
+> tests, and documentation). It is a personal project, not professional
+> financial advice. Verify any number that matters against an independent
+> source — a licensed financial advisor, the relevant IRS or plan rules, or
+> your own spreadsheet — before relying on it for a real-world decision. The
+> author and the AI tools used to build this make no warranty that the
+> formulas, defaults, or outputs are correct or current.
+
 ## What it does
 
 - Models accumulation, Coast FIRE, and retirement phases year by year

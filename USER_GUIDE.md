@@ -8,6 +8,15 @@ Use the inputs panel on the left to configure your scenario; results update on e
 change. The right side shows charts, a year-by-year projection table, and an Excel export
 button. Below is a reference for every input, control, chart, and table column.
 
+> **AI-assisted development.** This planner was built with substantial help from
+> AI coding assistants (writing, reviewing, and refactoring source code, tests,
+> and documentation). It is a personal project under active development and is
+> **not professional financial advice**. Verify any number that matters against
+> an independent source — a licensed financial advisor, the relevant IRS or plan
+> rules, or your own spreadsheet — before relying on it for a real-world
+> decision. The author and the AI tools used to build this make no warranty
+> that the formulas, defaults, or outputs are correct or current.
+
 > **Heads-up: income taxes on withdrawals are NOT yet modeled.** All withdrawal,
 > spend, and balance numbers are shown *gross of income tax* — the only tax-like
 > deduction the engine currently applies is the early-withdrawal penalty. See the
@@ -29,10 +38,31 @@ older versions of the app are auto-migrated when loaded.
 - *Accounts* — per-account configuration
 - *Projection* — full year-by-year table including per-account columns
 
-**Reset to defaults** — Clears your saved scenario and reverts every field to its
-default value. Asks for confirmation first.
+**Reset** — Opens a small menu with two choices:
+- *Reset to defaults* — clears your saved scenario and reverts every field to its
+  default value. Asks for confirmation first.
+- *Run setup wizard* — reopens the first-time setup wizard so you can re-enter
+  your scenario step by step instead of editing fields one at a time. Useful
+  after a major life change (new job, marriage, retirement).
 
 **User guide** — Opens this drawer. You're reading it now.
+
+## Setup wizard
+
+First-time visitors are greeted by a 10-step setup wizard that walks through
+every core input — ages, inflation, salary, employer match, accounts,
+withdrawal plan, Social Security, and Coast FIRE — with plain-language
+explanations and pre-filled defaults. Each step starts with reasonable values
+so you can move quickly through the ones that don't apply.
+
+You can re-run the wizard at any time from the **Reset** button in the toolbar.
+The wizard never opens automatically once you've saved a scenario — only on a
+truly fresh first visit. To skip the wizard and start with the planner's
+default scenario, click *Skip / use defaults* in the wizard header.
+
+Finishing the wizard writes your assembled scenario to this browser's local
+storage. Your scenario is private to this device — nothing is uploaded
+anywhere.
 
 ## Ages
 
