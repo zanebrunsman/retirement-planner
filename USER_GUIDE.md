@@ -83,7 +83,9 @@ counter and ‹ › chevrons next to the search field for stepping through hits
 (Enter advances, Shift+Enter goes back, Esc closes the drawer). The
 jump-to-section dropdown is also a *scrollspy* — as you scroll the guide, it
 updates automatically to reflect whichever section is currently in view, so
-you can always tell where you are in the document.
+you can always tell where you are in the document. Picking the same
+section twice in a row — e.g. after scrolling away — jumps you back to
+it; the dropdown no longer ignores re-selections.
 
 ## Editing inputs — undo, redo, and validation
 
@@ -431,11 +433,13 @@ chart or the projection table.
 Y-axis ceiling: `+` zooms in (lowers the ceiling, useful for inspecting
 the early-accumulation years when later balances dwarf them), `−` zooms
 out, and `⟲` resets to the data-driven default. Each step changes the
-ceiling by a factor of 1.5. The default ceiling fits the deterministic
-maximum when the Monte Carlo fan is hidden, and the 95th-percentile
-maximum when the fan is visible — toggling *Show MC fan* therefore
-also shifts the default ceiling. The lower bound stays at $0. Zoom
-state is per-session, not saved with the scenario.
+ceiling by a factor of 1.5. The default ceiling is *Total × 1.1* — the
+deterministic Total line plus 10% headroom — regardless of whether the
+Monte Carlo fan is visible; when the fan is on, any portion that pokes
+above the ceiling is simply clipped. The lower bound stays at $0. Any
+input change or a flip of the *Nominal $ / Today's $* toggle
+automatically resets the zoom step to its default, so you don't end up
+staring at a clipped chart of a brand-new scenario.
 
 ### Annual contributions
 Overlapping (un-stacked) area chart of contributions by account each year, with a
@@ -464,8 +468,11 @@ balance is likely to land across thousands of randomized trials. The wider light
 band marks the 5th–95th percentile range; the darker inner band marks the 25th–75th.
 A dashed line plots the median trial. The deterministic projection lines stay
 on top so you can compare the single-line estimate to the distribution. Bands
-automatically disappear when you change any input (results would be stale
-relative to the new scenario); re-run Monte Carlo to refresh them.
+automatically disappear when you change any input that would affect the
+simulation (results would be stale relative to the new scenario); re-run
+Monte Carlo to refresh them. *Multi-age sweep* runs are special: the bands
+stay fresh as you slide the *Retirement age* control anywhere within the
+sweep range — see the *Multi-age sweep* section below.
 
 ## Monte Carlo simulation
 
@@ -519,12 +526,17 @@ on, the global inputs in the MC panel grey out so it's clear they're inactive.
 Setting an account's volatility to 0 makes it behave deterministically.
 
 ### Trial count
-The Trials selector in the Monte Carlo panel offers 1,000 / 5,000 /
-10,000 / 25,000 / 50,000 trials. Default is 10,000. More trials =
-smoother percentile bands and more stable success-rate estimates, but
-longer compute time. 10,000 is plenty for typical planning; 25,000 or
-50,000 is useful when stress-testing tail outcomes (5th/95th
-percentile become much more stable at higher counts).
+The Trials selector in the Monte Carlo panel offers 1,000 / 2,000 /
+5,000 / 10,000 / 25,000 / 50,000 trials. Default is 10,000 for a
+single-age run, and drops to 2,000 when the *Multi-age sweep*
+checkbox is on (the sweep does up to 41 per-age runs in parallel,
+so fewer trials per age keeps the total cost reasonable). More
+trials = smoother percentile bands and more stable success-rate
+estimates, but longer compute time. 10,000 is plenty for typical
+planning; 25,000 or 50,000 is useful when stress-testing tail
+outcomes (5th/95th percentile become much more stable at higher
+counts). The selector remains editable in either mode — override the
+default if you want.
 
 While a run is in progress the *Run* button shows a progress bar that fills
 from left to right with a percentage label, so you can see the simulation is
@@ -539,10 +551,19 @@ lines are dwarfed by the fan envelope.
 ### Stale results
 Monte Carlo runs in a Web Worker and the results are cached against a hash of
 your inputs. The moment you edit any field, the cached result is flagged
-*Stale* — the fan-chart bands are hidden and the panel shows a stale badge.
-Click *Re-run Monte Carlo* to refresh. Toggling theme or chart palette
-does *not* mark Monte Carlo stale (those are presentation-only changes
-and don't affect the underlying simulation).
+*Stale* — the fan-chart bands are hidden, and the success pill plus the
+p5/p95 ranges on the KPI tiles disappear entirely until you re-run.
+Toggling theme or chart palette does *not* mark Monte Carlo stale
+(those are presentation-only changes and don't affect the underlying
+simulation).
+
+When *Multi-age sweep* is on, a sweep result keeps the fan, the success
+pill, and the KPI ranges fresh across the whole sweep range — you can
+nudge the *Retirement age* slider anywhere within ±20 years of the age
+you swept and the panel will silently swap to the cached result for the
+new age, no re-run required. Editing any non-retirement-age input
+(salary, spend, growth rates, etc.) discards the sweep cache the same
+way it discards a single-age result.
 
 ### Monte Carlo on the KPI tiles
 Once a Monte Carlo run is fresh, three of the headline KPI tiles surface
@@ -562,6 +583,33 @@ additional information drawn from the trial distribution:
     depletion age, with the median outcome as a subtitle.
   - **Red** when fewer than half succeed; shows the median depletion
     age, with the 5th-percentile age as a subtitle.
+
+### Multi-age sweep (±20 years)
+Turning on the **Multi-age sweep** checkbox in the MC panel runs an
+entire range of retirement ages — *retirement age ± 20 years*, in 1-year
+steps, clipped to your *current age* and *end age*. The sweep runs ages
+in parallel using a worker pool sized to your CPU (up to 8 workers),
+so a 41-age sweep typically finishes in well under a minute on a modern
+laptop.
+
+While the sweep is running, the *Run* button shows `Running MC… N / M
+ages` with a slim progress bar beneath it; a *Cancel* button lets you
+bail out at any point. When complete, two visualisations appear below
+the single-age fan and tables:
+
+- **Sweep chart** — four lines on a dual-axis grid: P-success (green,
+  left axis 0–100%) and median / p5 / p95 ending balance in today's $
+  (right axis). The currently-selected retirement age is highlighted
+  with a dashed vertical line so you can see exactly which row drives
+  the headline KPIs.
+- **Sweep heatmap** — one row per swept age, four columns (P-success,
+  median, p5, p95), each column independently colour-graded so the
+  trade-off is visible at a glance: red → amber → green for success
+  rate, pale → saturated for dollar metrics.
+
+The sweep cache is held in memory only — it isn't persisted across
+browser sessions and isn't included in saved scenario files. Toggle the
+checkbox off to discard it.
 
 ### What the simulation models
 Returns are sampled per account per year from a lognormal distribution centered

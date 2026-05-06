@@ -53,7 +53,8 @@ A user guide is included in [USER_GUIDE.md](./USER_GUIDE.md).
   the to-do list.
 - Returns can be projected deterministically (a single growth rate per
   account) or stochastically via Monte Carlo simulation (per-account
-  volatility, lognormal sampling, 250–25,000 trials).
+  volatility, lognormal sampling, 1,000–50,000 trials, with a multi-age
+  retirement sweep that reuses the same engine across a range of ages).
 - US-centric: contribution caps and account types follow US rules.
 
 ## Privacy
