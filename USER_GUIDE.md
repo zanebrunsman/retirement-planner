@@ -80,7 +80,15 @@ horizon (commonly 90–100). The projection stops here regardless of remaining b
 apply (typically 59.5 in the U.S.). Withdrawals before this age from preTax accounts
 or Roth gains pay the early-withdrawal penalty defined on each account.
 
+> Coast FIRE is now toggled in **Deep settings → Coast FIRE**. When enabled,
+> a *Coast start age* input slides into this section between *Current age* and
+> *Retirement age*.
+
 ## Coast FIRE
+
+**Enable Coast FIRE** lives in **Deep settings → Coast FIRE**. When enabled, a
+*Coast start age* input appears in the Ages section between *Current age* and
+*Retirement age*.
 
 **Enable Coast FIRE** — When checked, contributions stop at the Coast start age, but
 the portfolio continues to grow at the pre-retirement growth rate until you retire.
@@ -121,11 +129,19 @@ the contribution amounts you enter on each account land in the portfolio.
 Set to 0 to keep salary and contributions flat in nominal $ — silently conservative.
 
 **Employer match %** — Percent of your current-year salary contributed by your
-employer to match-eligible accounts. The total match pool each year is
-`salary × match%`, capped at the sum of your own contributions to match-eligible
-accounts. The pool is distributed across match-eligible accounts proportionally to
-each account's own contribution. Match contributions are *not* counted against an
-account's annual cap — they apply on top.
+employer to a single routed account. The match pool each year is
+`salary × match%`, capped at the routed account's own annual contribution
+(you can't match more than you put in). Match contributions are *not* counted
+against the routed account's annual cap — they apply on top.
+
+The destination account is configured in **Deep settings → Employer match
+routing**. The dropdown lists every enabled account and defaults to *Auto*,
+which resolves in this order:
+
+1. The account you explicitly pick in the dropdown (if any).
+2. The first enabled Traditional 401(k).
+3. The first enabled account of any type.
+4. If no accounts are enabled, the match contributes nothing.
 
 ## Accounts
 
@@ -190,10 +206,6 @@ lower than pre-retirement growth to model a more conservative allocation in reti
 **Early-WD penalty** — Penalty rate applied when withdrawing before the penalty-free
 age. Only applies to pre-tax accounts and Roth gains. Taxable accounts are never
 penalized; Roth basis is always penalty-free.
-
-**Eligible for employer match** — When checked, this account participates in the
-employer match. The match pool is distributed across all eligible accounts in
-proportion to each account's own contribution.
 
 ### Ranks
 **Pre-penalty rank** — Withdrawal priority before the penalty-free age. Rank 1 is
@@ -388,26 +400,36 @@ deterministic line, just as before.
   it happen? Failures clustered at the tail end (e.g. age 90+) are far less
   scary than failures starting in your 70s.
 
-### Volatility input
-Each account has a *Volatility* field (annual return standard deviation). This
-is ignored by the deterministic projection but drives the random sampling in
-Monte Carlo. Sensible defaults per asset class:
+### Volatility inputs
+The Monte Carlo panel (next to the *Run* button) has two global inputs:
 
-- **Stock-heavy growth accounts** (Roth IRA, 401(k), Brokerage): 15% (S&P 500
-  long-run σ is roughly 15–18%)
-- **Bond / mixed accounts**: 5%
-- **Cash / Savings**: 1%
-- **HSA**: 10% (mixed-asset default)
+- **Pre-retirement volatility** — sigma during accumulate / coast.
+- **Post-retirement volatility** — sigma after retirement age.
 
-You can override per-account if you have a more specific allocation in mind.
-Setting volatility to 0 makes that account behave deterministically inside the
-Monte Carlo run.
+These drive the random sampling for *every* account by default. Sensible defaults:
+
+- **Stock-heavy** (Roth IRA, 401(k), Brokerage): 15% pre / 10% post
+- **Bond / mixed**: 5% pre / 4% post
+- **Cash / Savings**: 1% pre / 1% post
+
+#### Per-account override
+In **Deep settings → Monte Carlo**, toggle **Use per-account volatility** to
+switch from the two global inputs above to the *Pre-retirement volatility* and
+*Post-retirement volatility* fields on each account card. When that toggle is
+on, the global inputs in the MC panel grey out so it's clear they're inactive.
+Setting an account's volatility to 0 makes it behave deterministically.
 
 ### Trial count
-Default is 1,000 trials, configurable up to 5,000. More trials = smoother
-percentile bands and more stable success-rate estimates, but longer compute
-time. 1,000 is plenty for typical planning; bump to 5,000 if you're stress-testing
-the edges of the distribution.
+The Trials selector in the Monte Carlo panel ranges from 250 to 25,000.
+Default is 1,000. More trials = smoother percentile bands and more stable
+success-rate estimates, but longer compute time. 1,000 is plenty for typical
+planning; 5,000–10,000 is useful when stress-testing tail outcomes.
+
+### Show MC fan toggle
+Once you've run Monte Carlo, the *Portfolio over time* chart shows a
+**Show MC fan** checkbox. Untick it to hide the percentile fan while keeping
+the Monte Carlo *median* (P50) line visible — useful when account balance
+lines are dwarfed by the fan envelope.
 
 ### Stale results
 Monte Carlo runs in a Web Worker and the results are cached against a hash of
