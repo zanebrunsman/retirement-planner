@@ -37,6 +37,13 @@ change without notice, and known issues are still being worked on.
 - Charts: balance over time, annual contributions (per-account + total),
   spending need vs shortfall
 - Excel export of the full year-by-year projection
+- Side-by-side compare modal with up to three scenarios — KPI table,
+  overlaid charts, and a live Monte Carlo summary row (success rate +
+  median depletion age, computed in a Web Worker per slot)
+- Named scenario library (up to 20 entries, stored in your browser) for
+  quickly switching between or comparing saved scenarios
+- Print / PDF view that hides controls and prints the dashboard plus the
+  year-by-year table in a clean, paper-friendly layout
 
 A user guide is included in [USER_GUIDE.md](./USER_GUIDE.md).
 
@@ -52,9 +59,13 @@ A user guide is included in [USER_GUIDE.md](./USER_GUIDE.md).
   Roth IRAs. Real Roth 401(k) plans use pro-rata basis-and-gains; this is on
   the to-do list.
 - Returns can be projected deterministically (a single growth rate per
-  account) or stochastically via Monte Carlo simulation (per-account
-  volatility, lognormal sampling, 1,000–50,000 trials, with a multi-age
-  retirement sweep that reuses the same engine across a range of ages).
+  account) or stochastically via Monte Carlo simulation. Two return
+  models are available: **Lognormal** (i.i.d. draws from a bell curve
+  per account, fast and the default) and **Historical bootstrap**
+  (block-resampled real returns from the Shiller S&P 500 + 10-year
+  Treasury dataset, 1928–2023, which preserves volatility clustering and
+  fat tails). Per-account volatility, 1,000–50,000 trials, and a
+  multi-age retirement sweep are all supported.
 - US-centric: contribution caps and account types follow US rules.
 
 ## Privacy

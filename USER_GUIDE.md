@@ -45,13 +45,33 @@ glance when you last exported your work.
 
 **Load scenario** — Imports a previously-saved JSON file. Replaces all current inputs.
 
+**Save to library / Saved scenarios** — In-browser scenario library. *Save to
+library* lets you name the current scenario and store it locally; *Saved
+scenarios* opens the manage view where you can load, delete, or wipe entries.
+The library is capped at **20 scenarios** (each ~2–4 KB) so it cannot balloon
+your browser storage. Saving the same name twice overwrites in place. Saved
+scenarios live in this browser only — they don't sync across devices, and
+opening the planner in a different browser or on a different device starts you
+with an empty library. To move scenarios between devices, use *Save scenario
+(.json)* and *Load scenario* instead. The library is preserved by the regular
+*Reset to defaults* flow; only *Clear all data* (in the Reset menu) wipes it.
+
 **Compare scenarios** — Opens a comparison modal that lets you stack the
-current scenario against up to two saved `.json` files. Drop a file into a slot
-(or click *Choose file…*) and the modal shows a KPI table (portfolio at
-retirement, runs-out age, contributing years, first-year withdrawal, ending
-balance, total penalty paid) plus three overlaid charts (portfolio over time,
-annual contributions, out-of-pocket spending). The current scenario is always
-pinned to the first slot.
+current scenario against up to two other saved scenarios. Each non-current
+slot has a *Load from library…* dropdown (when the library has entries) plus
+the original *Choose file…* button for `.json` imports. The modal shows a KPI
+table (portfolio at retirement, runs-out age, contributing years, first-year
+withdrawal, ending balance, total penalty paid), a small **Monte Carlo
+summary** row (success rate + median depletion age, computed with 1,000
+trials per scenario), and three overlaid charts (portfolio over time, annual
+contributions, out-of-pocket spending). The current scenario is always pinned
+to the first slot.
+
+**Print / PDF** — Opens your browser's native print dialog after stripping the
+app chrome (sidebar, toolbar, MC controls). Pick *Save as PDF* in the print
+dialog destination to get a clean PDF of the projection table, KPI tiles, and
+portfolio chart. The dark theme is forced to light during printing so ink and
+contrast stay sensible. Closing the print dialog restores the normal layout.
 
 **Export to Excel** — Generates a .xlsx workbook with three sheets:
 - *Inputs* — every input value used for the run
@@ -69,12 +89,16 @@ first visit the planner respects your operating system's color-scheme
 preference, so dark-mode OS users start in dark; thereafter the choice
 persists with the rest of your scenario.
 
-**Reset** — Opens a small menu with two choices:
-- *Reset to defaults* — clears your saved scenario and reverts every field to its
-  default value. Asks for confirmation first.
+**Reset** — Opens a small menu with three choices:
+- *Reset to defaults* — clears your **current scenario** and reverts every
+  field to its default value. Saved-library entries are kept. Asks for
+  confirmation first.
 - *Run setup wizard* — reopens the first-time setup wizard so you can re-enter
   your scenario step by step instead of editing fields one at a time. Useful
   after a major life change (new job, marriage, retirement).
+- *Clear all data* — nukes the current scenario **and** every entry in your
+  saved-scenario library. The escape hatch when you want a totally clean
+  slate. Cannot be undone.
 
 **User guide** — Opens this drawer. The drawer has a search box and a
 jump-to-section dropdown so you can find topics quickly without scrolling.
@@ -524,6 +548,45 @@ switch from the two global inputs above to the *Pre-retirement volatility* and
 *Post-retirement volatility* fields on each account card. When that toggle is
 on, the global inputs in the MC panel grey out so it's clear they're inactive.
 Setting an account's volatility to 0 makes it behave deterministically.
+
+### Return model — Lognormal vs Historical bootstrap
+
+**Deep settings → Monte Carlo → Return model** picks how the simulator
+generates each year's random return. Two choices:
+
+- **Lognormal (i.i.d., default).** Each year independently draws from a
+  bell curve centered on the account's growth rate, scaled by the
+  configured volatility. Fast, simple, and the textbook default — but it
+  assumes years have no memory of one another, so back-to-back bad years
+  show up only by coincidence. This understates *sequence-of-returns risk*
+  for early retirees.
+
+- **Historical bootstrap (1928–2023 real returns).** Instead of generating
+  returns from a formula, the simulator resamples blocks of consecutive
+  years from the actual market record (Robert Shiller's S&P 500 + 10-year
+  Treasury dataset, deflated by CPI so all returns are *real*). For each
+  trial, a random start year is picked and the next *N* years come straight
+  from history; when the block ends, a new random start is picked. This
+  preserves volatility clustering — a 1929 draw also drags 1930–31 along
+  with it — and the genuine fat tails of the historical record. Block
+  length defaults to 5 years (the academic standard) and is configurable
+  in the same panel.
+
+  Account classification: each account is treated as **stock-like**
+  (assumed return ≥ 6%) or **bond-like** (< 6%) based on its `growthPre` /
+  `growthPost`. Stock-like accounts pull the year's S&P 500 real return;
+  bond-like accounts pull the 10-year Treasury real return. This sidesteps
+  asking you to specify a per-account stock/bond split.
+
+**When to use which.** Lognormal is the right starting point — it's faster
+and the bell-curve assumption is fine when you're just sliding inputs
+around to get a feel for trade-offs. Switch to bootstrap when you're
+pressure-testing a real plan: bootstrap success rates are typically
+5–15 percentage points lower than lognormal for aggressive early-retirement
+scenarios, and that gap is exactly the sequence-of-returns risk you want
+to see before committing. Bootstrap also exposes specific historical
+decades — 1929, 1966, 2000 — that would have killed otherwise-plausible
+plans, so the depletion-age histogram becomes a much sharper diagnostic.
 
 ### Trial count
 The Trials selector in the Monte Carlo panel offers 1,000 / 2,000 /
