@@ -576,13 +576,29 @@ additional information drawn from the trial distribution:
   today's $ for *Plan ending balance*). The range grays out when
   results are stale.
 - **Portfolio runs out** — below the deterministic *Runs out at age _*
-  pill, a second pill summarizes the Monte Carlo outcome:
+  pill, a second pill summarizes the Monte Carlo outcome. Severity is
+  encoded by the pill *colour*; the line order and phrasing are the
+  same in every failing tier so the numbers don't reorder when you
+  nudge the retirement-age slider.
   - **Green** when at least 95% of trials make it to plan-end
-    ("95% chance: lasts to age _").
-  - **Yellow** when 50–94% of trials succeed; shows the 5th-percentile
-    depletion age, with the median outcome as a subtitle.
-  - **Red** when fewer than half succeed; shows the median depletion
-    age, with the 5th-percentile age as a subtitle.
+    ("95% chance: lasts to age _"). No subtitle.
+  - **Yellow** when 50–94% of trials succeed.
+  - **Red** when fewer than half succeed.
+
+  Yellow and red pills both show the same two lines:
+  - **"50% of trials run out before age _"** as the headline — the
+    typical failure age, which you can read as "half the simulated
+    paths run out by this point".
+  - **"5% of trials run out before age _"** as the subtitle — the
+    bad-tail age, the threshold below which only 1-in-20 of the
+    simulated paths run out.
+
+  Note that with a high success rate it is normal for the 5% age
+  to land *later* than the 50% age — the few failing trials cluster
+  near plan-end rather than spreading across early ages. When at
+  least 95% of trials succeed there is no widely shared failure age
+  to report, so the green pill collapses to the single "lasts to
+  age _" line.
 
 ### Multi-age sweep (±20 years)
 Turning on the **Multi-age sweep** checkbox in the MC panel runs an
