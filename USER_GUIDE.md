@@ -25,18 +25,36 @@ button. Below is a reference for every input, control, chart, and table column.
 
 ## Top-level toolbar
 
+The toolbar is **sticky** — it stays pinned to the top of the screen while you
+scroll the projection table or charts, so the primary actions are always one
+click away.
+
 **Hide / Show inputs** — Collapses the left sidebar to give the projection table more room.
 
 **Save scenario (.json)** — Downloads a JSON file containing every input value (ages,
 inflation, accounts, ranks, etc.). Useful for backup or sharing. Saved scenarios from
-older versions of the app are auto-migrated when loaded.
+older versions of the app are auto-migrated when loaded. After clicking Save, a
+small *Saved Ns ago* indicator appears next to the button so you can see at a
+glance when you last exported your work.
 
 **Load scenario** — Imports a previously-saved JSON file. Replaces all current inputs.
+
+**Compare scenarios** — Opens a comparison modal that lets you stack the
+current scenario against up to two saved `.json` files. Drop a file into a slot
+(or click *Choose file…*) and the modal shows a KPI table (portfolio at
+retirement, runs-out age, contributing years, first-year withdrawal, ending
+balance, total penalty paid) plus three overlaid charts (portfolio over time,
+annual contributions, out-of-pocket spending). The current scenario is always
+pinned to the first slot.
 
 **Export to Excel** — Generates a .xlsx workbook with three sheets:
 - *Inputs* — every input value used for the run
 - *Accounts* — per-account configuration
 - *Projection* — full year-by-year table including per-account columns
+
+**Deep settings** — Opens a centered modal with advanced settings (Monte Carlo
+defaults, manual waterfall ranks, currency, theme/palette). Click the backdrop
+or press Esc to close.
 
 **Reset** — Opens a small menu with two choices:
 - *Reset to defaults* — clears your saved scenario and reverts every field to its
@@ -45,7 +63,48 @@ older versions of the app are auto-migrated when loaded.
   your scenario step by step instead of editing fields one at a time. Useful
   after a major life change (new job, marriage, retirement).
 
-**User guide** — Opens this drawer. You're reading it now.
+**User guide** — Opens this drawer. The drawer has a search box and a
+jump-to-section dropdown so you can find topics quickly without scrolling.
+
+## Editing inputs — undo, redo, and validation
+
+**Undo / redo** — Every change you make to an input field is recorded. Use
+`Cmd/Ctrl+Z` to undo and `Shift+Cmd/Ctrl+Z` (or `Cmd/Ctrl+Y`) to redo. History
+goes back up to 50 edits and is cleared automatically when you reset. Undo or
+redo also clears any Monte Carlo fan chart you'd already run, since the result
+belonged to a different set of inputs.
+
+Age fields **don't** have native browser-input undo, so the keyboard shortcut
+is the only way to revert an unintentional edit. Field-level undo (the kind
+your browser provides while typing inside a single text input) still works the
+same as before — the planner-level undo only kicks in once focus leaves the
+field.
+
+**Validation banners** — A yellow banner appears at the top of a section when
+the inputs are structurally inconsistent (e.g. retirement age earlier than
+current age, Social Security claim before current age, Coast age outside the
+working window). The projection still runs so you can see the effect, but the
+banner flags the issue until you fix it. Validation is structural only — no
+tax-law or contribution-limit checks. For 401(k) / IRA / HSA contribution
+caps, see the [IRS retirement plan limits page](https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-contributions).
+
+**Drag-and-drop account reordering** — Each account card has a drag handle
+(`⋮⋮`) on the left of its header. Click and drag to reorder accounts. The new
+order is reflected immediately in the projection and Excel export. Listed
+order also acts as the tiebreaker when two accounts share the same withdrawal
+rank.
+
+**Collapsed account summaries** — Account cards collapse to a single line
+showing name, balance, monthly contribution, and growth rate. Click the
+header to expand and edit. New accounts you add start expanded so you can
+fill them in right away.
+
+**Help tips** — Most field labels have a `?` button next to them. Click for a
+popover explanation that goes deeper than the inline hint text.
+
+**Theme & chart palette** — Set in *Deep settings*. Light/dark theme tracks
+your OS by default; chart palette options (Okabe–Ito, Tableau-10, Calm) are
+designed for color-vision accessibility.
 
 ## Setup wizard
 
@@ -335,8 +394,13 @@ just relabels the symbol; it does *not* convert values when you switch currencie
 ### Portfolio over time
 Line chart showing your end-of-year total portfolio balance for every year in the
 plan. The shaded background bands mark the four phases (Accumulate / Coast / Retire
-pre-penalty / Retire post-penalty). The line is in nominal dollars. To see today's
-purchasing power, use the *Today $* column in the table.
+pre-penalty / Retire post-penalty).
+
+**Inflation-adjusted toggle** — Above the chart there's a *Today's $* toggle.
+When on, the Total line is drawn in today's purchasing power and rendered with
+a dashed stroke and the *Today $* color (`--chart-today`). When off, the line
+is in nominal dollars. The toggle is chart-local — it doesn't change any
+other chart or the projection table.
 
 ### Annual contributions
 Overlapping (un-stacked) area chart of contributions by account each year, with a
@@ -424,6 +488,10 @@ The Trials selector in the Monte Carlo panel ranges from 250 to 25,000.
 Default is 1,000. More trials = smoother percentile bands and more stable
 success-rate estimates, but longer compute time. 1,000 is plenty for typical
 planning; 5,000–10,000 is useful when stress-testing tail outcomes.
+
+While a run is in progress the *Run* button shows a progress bar that fills
+from left to right with a percentage label, so you can see the simulation is
+working even on slower devices.
 
 ### Show MC fan toggle
 Once you've run Monte Carlo, the *Portfolio over time* chart shows a
