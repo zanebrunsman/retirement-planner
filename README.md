@@ -16,6 +16,10 @@ change without notice, and known issues are still being worked on.
 > author and the AI tools used to build this make no warranty that the
 > formulas, defaults, or outputs are correct or current.
 
+> 🛠️ **Deployment branch.** The live GitHub Pages site is currently built
+> from the `development` branch, not `main`. New work lands on `development`
+> first and is fast-forwarded to `main` once it's been smoke-tested.
+
 ## What it does
 
 - Models accumulation, Coast FIRE, and retirement phases year by year

@@ -31,6 +31,12 @@ click away.
 
 **Hide / Show inputs** — Collapses the left sidebar to give the projection table more room.
 
+**Undo / Redo** — Two small icon buttons immediately right of *Hide inputs*. They
+undo or redo the last input edit, mirror the `Cmd/Ctrl+Z` and `Shift+Cmd/Ctrl+Z`
+(or `Cmd/Ctrl+Y`) keyboard shortcuts, and are greyed out when there's nothing to
+undo or redo. Hovering shows how many steps are currently available in each
+direction.
+
 **Save scenario (.json)** — Downloads a JSON file containing every input value (ages,
 inflation, accounts, ranks, etc.). Useful for backup or sharing. Saved scenarios from
 older versions of the app are auto-migrated when loaded. After clicking Save, a
@@ -74,15 +80,23 @@ persists with the rest of your scenario.
 jump-to-section dropdown so you can find topics quickly without scrolling.
 Matches in the body are highlighted as you type, with a small `n / total`
 counter and ‹ › chevrons next to the search field for stepping through hits
-(Enter advances, Shift+Enter goes back, Esc closes the drawer).
+(Enter advances, Shift+Enter goes back, Esc closes the drawer). The
+jump-to-section dropdown is also a *scrollspy* — as you scroll the guide, it
+updates automatically to reflect whichever section is currently in view, so
+you can always tell where you are in the document.
 
 ## Editing inputs — undo, redo, and validation
 
-**Undo / redo** — Every change you make to an input field is recorded. Use
-`Cmd/Ctrl+Z` to undo and `Shift+Cmd/Ctrl+Z` (or `Cmd/Ctrl+Y`) to redo. History
-goes back up to 50 edits and is cleared automatically when you reset. Undo or
-redo also clears any Monte Carlo fan chart you'd already run, since the result
-belonged to a different set of inputs.
+**Undo / redo** — Every change you make to an input field is recorded. You can
+trigger undo or redo three ways:
+- The two icon buttons in the sticky toolbar (right of *Hide inputs*)
+- The keyboard shortcuts `Cmd/Ctrl+Z` / `Shift+Cmd/Ctrl+Z` / `Cmd/Ctrl+Y`
+- Both stay in sync — the buttons grey out when their stack is empty and
+  show the available step count on hover.
+
+History goes back up to 50 edits and is cleared automatically when you reset.
+Undo or redo also clears any Monte Carlo fan chart you'd already run, since the
+result belonged to a different set of inputs.
 
 Age fields **don't** have native browser-input undo, so the keyboard shortcut
 is the only way to revert an unintentional edit. Field-level undo (the kind
@@ -413,6 +427,16 @@ per-account line, the total, and (when Monte Carlo has been run) every
 percentile band and the median trial. Toggling it does not change any other
 chart or the projection table.
 
+**Y-axis zoom** — Three small buttons in the chart's top-right control the
+Y-axis ceiling: `+` zooms in (lowers the ceiling, useful for inspecting
+the early-accumulation years when later balances dwarf them), `−` zooms
+out, and `⟲` resets to the data-driven default. Each step changes the
+ceiling by a factor of 1.5. The default ceiling fits the deterministic
+maximum when the Monte Carlo fan is hidden, and the 95th-percentile
+maximum when the fan is visible — toggling *Show MC fan* therefore
+also shifts the default ceiling. The lower bound stays at $0. Zoom
+state is per-session, not saved with the scenario.
+
 ### Annual contributions
 Overlapping (un-stacked) area chart of contributions by account each year, with a
 *Total* line drawn on top showing the sum across all accounts. Each account's
@@ -495,10 +519,12 @@ on, the global inputs in the MC panel grey out so it's clear they're inactive.
 Setting an account's volatility to 0 makes it behave deterministically.
 
 ### Trial count
-The Trials selector in the Monte Carlo panel ranges from 250 to 25,000.
-Default is 1,000. More trials = smoother percentile bands and more stable
-success-rate estimates, but longer compute time. 1,000 is plenty for typical
-planning; 5,000–10,000 is useful when stress-testing tail outcomes.
+The Trials selector in the Monte Carlo panel offers 1,000 / 5,000 /
+10,000 / 25,000 / 50,000 trials. Default is 10,000. More trials =
+smoother percentile bands and more stable success-rate estimates, but
+longer compute time. 10,000 is plenty for typical planning; 25,000 or
+50,000 is useful when stress-testing tail outcomes (5th/95th
+percentile become much more stable at higher counts).
 
 While a run is in progress the *Run* button shows a progress bar that fills
 from left to right with a percentage label, so you can see the simulation is
@@ -514,7 +540,28 @@ lines are dwarfed by the fan envelope.
 Monte Carlo runs in a Web Worker and the results are cached against a hash of
 your inputs. The moment you edit any field, the cached result is flagged
 *Stale* — the fan-chart bands are hidden and the panel shows a stale badge.
-Click *Re-run Monte Carlo* to refresh.
+Click *Re-run Monte Carlo* to refresh. Toggling theme or chart palette
+does *not* mark Monte Carlo stale (those are presentation-only changes
+and don't affect the underlying simulation).
+
+### Monte Carlo on the KPI tiles
+Once a Monte Carlo run is fresh, three of the headline KPI tiles surface
+additional information drawn from the trial distribution:
+
+- **Portfolio at retirement** and **Plan ending balance** — each tile
+  gains a two-line `↑ p95` / `↓ p5` range below the deterministic
+  figure, showing the 95th- and 5th-percentile outcomes from Monte
+  Carlo (matching units: nominal $ for *Portfolio at retirement*,
+  today's $ for *Plan ending balance*). The range grays out when
+  results are stale.
+- **Portfolio runs out** — below the deterministic *Runs out at age _*
+  pill, a second pill summarizes the Monte Carlo outcome:
+  - **Green** when at least 95% of trials make it to plan-end
+    ("95% chance: lasts to age _").
+  - **Yellow** when 50–94% of trials succeed; shows the 5th-percentile
+    depletion age, with the median outcome as a subtitle.
+  - **Red** when fewer than half succeed; shows the median depletion
+    age, with the 5th-percentile age as a subtitle.
 
 ### What the simulation models
 Returns are sampled per account per year from a lognormal distribution centered
