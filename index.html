@@ -5,9 +5,36 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Retirement Planner</title>
-  <script type="module" crossorigin src="./assets/index-3Oh3Ovyt.js"></script>
+  <!--
+    Pre-React theme bootstrap. Runs synchronously before React mounts so the
+    page renders in the correct theme on the first paint — no light-theme
+    flash for users who saved "dark", and no flash for OS-dark users on a
+    first visit. Intentionally tiny and dependency-free; mirrors the same
+    storage key the app uses (STORAGE_KEYS.scenario in src/storage.ts).
+  -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("retirement-planner-scenario-v2");
+        var theme = null;
+        if (saved) {
+          try { theme = (JSON.parse(saved) || {}).themeMode || null; } catch (_) {}
+        }
+        if (theme !== "light" && theme !== "dark") {
+          // No saved scenario yet — fall back to the OS preference.
+          theme = (window.matchMedia &&
+                   window.matchMedia("(prefers-color-scheme: dark)").matches)
+            ? "dark" : "light";
+        }
+        document.documentElement.dataset.theme = theme;
+      } catch (_) {
+        // Storage blocked / parse failure — leave default (light) styling.
+      }
+    })();
+  </script>
+  <script type="module" crossorigin src="./assets/index-BU6Cn7CG.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/recharts-DiEyVJ-I.js">
-  <link rel="stylesheet" crossorigin href="./assets/index-DeJjYPXe.css">
+  <link rel="stylesheet" crossorigin href="./assets/index-UlzfNHOU.css">
 </head>
 <body>
   <div id="root"></div>
