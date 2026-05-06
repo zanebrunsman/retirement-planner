@@ -53,8 +53,15 @@ pinned to the first slot.
 - *Projection* — full year-by-year table including per-account columns
 
 **Deep settings** — Opens a centered modal with advanced settings (Monte Carlo
-defaults, manual waterfall ranks, currency, theme/palette). Click the backdrop
+defaults, manual waterfall ranks, currency, chart palette). Click the backdrop
 or press Esc to close.
+
+**Theme toggle (sun / moon icon)** — Sits to the right of *Export to Excel*.
+A single click flips between light and dark mode. The icon previews where
+clicking will take you (moon while in light, sun while in dark). On a fresh
+first visit the planner respects your operating system's color-scheme
+preference, so dark-mode OS users start in dark; thereafter the choice
+persists with the rest of your scenario.
 
 **Reset** — Opens a small menu with two choices:
 - *Reset to defaults* — clears your saved scenario and reverts every field to its
@@ -65,6 +72,9 @@ or press Esc to close.
 
 **User guide** — Opens this drawer. The drawer has a search box and a
 jump-to-section dropdown so you can find topics quickly without scrolling.
+Matches in the body are highlighted as you type, with a small `n / total`
+counter and ‹ › chevrons next to the search field for stepping through hits
+(Enter advances, Shift+Enter goes back, Esc closes the drawer).
 
 ## Editing inputs — undo, redo, and validation
 
@@ -102,9 +112,10 @@ fill them in right away.
 **Help tips** — Most field labels have a `?` button next to them. Click for a
 popover explanation that goes deeper than the inline hint text.
 
-**Theme & chart palette** — Set in *Deep settings*. Light/dark theme tracks
-your OS by default; chart palette options (Okabe–Ito, Tableau-10, Calm) are
-designed for color-vision accessibility.
+**Theme & chart palette** — The light/dark theme is toggled from the sun /
+moon icon in the sticky toolbar (a fresh first visit follows your operating
+system's color-scheme preference). The chart palette (Okabe–Ito, Tableau-10,
+Calm — all designed for color-vision accessibility) lives in *Deep settings*.
 
 ## Setup wizard
 
@@ -396,11 +407,11 @@ Line chart showing your end-of-year total portfolio balance for every year in th
 plan. The shaded background bands mark the four phases (Accumulate / Coast / Retire
 pre-penalty / Retire post-penalty).
 
-**Inflation-adjusted toggle** — Above the chart there's a *Today's $* toggle.
-When on, the Total line is drawn in today's purchasing power and rendered with
-a dashed stroke and the *Today $* color (`--chart-today`). When off, the line
-is in nominal dollars. The toggle is chart-local — it doesn't change any
-other chart or the projection table.
+**Chart-units toggle** — Above the chart, a segmented `[Nominal $ | Today's $]`
+control restates *every* series on the chart in the chosen units — each
+per-account line, the total, and (when Monte Carlo has been run) every
+percentile band and the median trial. Toggling it does not change any other
+chart or the projection table.
 
 ### Annual contributions
 Overlapping (un-stacked) area chart of contributions by account each year, with a

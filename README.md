@@ -39,14 +39,17 @@ A user guide is included in [USER_GUIDE.md](./USER_GUIDE.md).
 ## Known limitations
 
 - **Taxes are not yet modeled.** Withdrawals are shown gross of income and
-  capital-gains tax (only the early-withdrawal 10% penalty on traditional
-  retirement accounts before age 59.5 is applied). Treat any "Fixed annual
-  spend" you enter as **pre-tax / gross income** until tax modeling lands.
+  capital-gains tax. The only tax-like deduction the engine applies is the
+  per-account early-withdrawal penalty (defaults to 10% on pre-tax accounts
+  and Roth gains before the penalty-free age, but is configurable per
+  account). Treat any "Fixed annual spend" you enter as **pre-tax / gross
+  income** until tax modeling lands.
 - Roth 401(k) pre-59.5 withdrawals are currently treated as basis-first like
   Roth IRAs. Real Roth 401(k) plans use pro-rata basis-and-gains; this is on
   the to-do list.
-- Returns can be displayed both in as deterministic (single growth rate per account) value, and
-  utilizing volatility percentage based Monte Carlo simulations.
+- Returns can be projected deterministically (a single growth rate per
+  account) or stochastically via Monte Carlo simulation (per-account
+  volatility, lognormal sampling, 250–25,000 trials).
 - US-centric: contribution caps and account types follow US rules.
 
 ## Privacy
@@ -61,9 +64,34 @@ non-compliant ones may not.
 
 ## Running locally
 
-The page is a single self-contained HTML file. Save `index.html` to your
-computer and open it in any modern browser. No server, no install, no
-network calls.
+This Pages repo only ships the *built* output — hashed JS/CSS bundles plus a
+Web Worker for Monte Carlo. ES module + cross-origin rules mean it will not
+run by double-clicking `index.html` over `file://`. Two ways to run it
+locally:
+
+**Option 1 — serve the built bundle.** Clone this repo and serve the
+directory with any static server, for example:
+
+```bash
+npx serve .
+# or
+python3 -m http.server 8000
+```
+
+Then open the printed `http://localhost:...` URL.
+
+**Option 2 — build from source.** The source repo (separate from this Pages
+repo) is a Vite + React + TypeScript project. Clone it, then:
+
+```bash
+npm install
+npm run dev      # hot-reloading dev server
+# or
+npm run build    # produces a dist/ directory equivalent to this Pages repo
+```
+
+Either way, no backend or network calls are required at runtime — the app
+stays entirely client-side.
 
 ## Feedback
 
