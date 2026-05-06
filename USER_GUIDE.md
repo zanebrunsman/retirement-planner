@@ -439,6 +439,9 @@ benefit grows each year by the inflation rate, mirroring SSA's annual COLA.
 **Display currency** — Changes the symbol and locale used for currency formatting in
 the inputs, table, charts, and Excel export. The planner is currency-agnostic — it
 just relabels the symbol; it does *not* convert values when you switch currencies.
+Because no underlying numeric input changes, flipping currency does **not**
+invalidate a Monte Carlo result you've already run — the same fan and success
+rate stay on screen, just relabelled.
 
 ## Charts
 
@@ -549,6 +552,13 @@ switch from the two global inputs above to the *Pre-retirement volatility* and
 on, the global inputs in the MC panel grey out so it's clear they're inactive.
 Setting an account's volatility to 0 makes it behave deterministically.
 
+> **Note (bootstrap mode):** when **Return model** is set to *Historical
+> bootstrap*, all volatility inputs — both the global pre/post sigmas next
+> to the *Run* button and the per-account override toggle — are **ignored**
+> and greyed out. Volatility in that mode comes from the historical record
+> itself, not from the sigma fields. Switch back to *Lognormal* to use the
+> volatility knobs.
+
 ### Return model — Lognormal vs Historical bootstrap
 
 **Deep settings → Monte Carlo → Return model** picks how the simulator
@@ -577,6 +587,13 @@ generates each year's random return. Two choices:
   `growthPost`. Stock-like accounts pull the year's S&P 500 real return;
   bond-like accounts pull the 10-year Treasury real return. This sidesteps
   asking you to specify a per-account stock/bond split.
+
+  **Account classification readout.** When bootstrap mode is selected,
+  Deep settings shows an **Account classification (bootstrap mode)** block
+  listing every enabled account with its assumed return and its resulting
+  *stock-like* / *bond-like* label. To flip an account between the two
+  series, edit its **Growth pre** value in the sidebar so it crosses the
+  6%-real cutoff.
 
 **When to use which.** Lognormal is the right starting point — it's faster
 and the bell-curve assumption is fine when you're just sliding inputs

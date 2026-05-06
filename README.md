@@ -65,7 +65,11 @@ A user guide is included in [USER_GUIDE.md](./USER_GUIDE.md).
   (block-resampled real returns from the Shiller S&P 500 + 10-year
   Treasury dataset, 1928–2023, which preserves volatility clustering and
   fat tails). Per-account volatility, 1,000–50,000 trials, and a
-  multi-age retirement sweep are all supported.
+  multi-age retirement sweep are all supported. In bootstrap mode the
+  volatility inputs are intentionally inactive — yearly returns come
+  from the historical record itself — and Deep settings shows a
+  per-account stock-like / bond-like classification readout based on a
+  6%-real cutoff applied to each account's growth rate.
 - US-centric: contribution caps and account types follow US rules.
 
 ## Privacy
