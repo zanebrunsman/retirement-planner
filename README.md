@@ -63,13 +63,19 @@ A user guide is included in [USER_GUIDE.md](./USER_GUIDE.md).
   models are available: **Lognormal** (i.i.d. draws from a bell curve
   per account, fast and the default) and **Historical bootstrap**
   (block-resampled real returns from the Shiller S&P 500 + 10-year
-  Treasury dataset, 1928–2023, which preserves volatility clustering and
-  fat tails). Per-account volatility, 1,000–50,000 trials, and a
-  multi-age retirement sweep are all supported. In bootstrap mode the
-  volatility inputs are intentionally inactive — yearly returns come
-  from the historical record itself — and Deep settings shows a
-  per-account stock-like / bond-like classification readout based on a
-  6%-real cutoff applied to each account's growth rate.
+  Treasury dataset, 1928–2023, which preserves volatility clustering
+  and fat tails). Bootstrap exposes an opt-in **drift-correction**
+  sub-toggle that rescales each historical year so the long-run
+  geometric mean matches your assumed growth rate while preserving
+  the historical shape (volatility, skew, fat tails) — useful when
+  modeling international, bond-heavy, or forward-looking allocations
+  whose long-run mean differs from U.S. 1928–2023. Per-account
+  volatility, 1,000–50,000 trials, and a multi-age retirement sweep
+  are all supported. In bootstrap mode the volatility inputs are
+  intentionally inactive — yearly returns come from the historical
+  record itself — and Deep settings shows a per-account stock-like /
+  bond-like classification readout based on a 6%-real cutoff applied
+  to each account's growth rate.
 - US-centric: contribution caps and account types follow US rules.
 
 ## Privacy
