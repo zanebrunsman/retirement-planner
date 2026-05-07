@@ -645,7 +645,7 @@ imports. The modal shows:
 - A KPI table — portfolio at retirement, runs-out age, contributing
   years, first-year withdrawal, ending balance, total penalty paid.
 - A small **Monte Carlo summary** row — success rate plus median
-  depletion age, computed with 1,000 trials per scenario.
+  depletion age, computed with 2,000 trials per scenario.
 - Three overlaid charts — portfolio over time, annual contributions,
   out-of-pocket spending.
 
@@ -853,11 +853,22 @@ The exact set of sheets depends on whether you've run Monte Carlo:
   modal because the trial count can be large.
 - **Sweep** *(when Multi-age sweep has been run)* — Per-age success%,
   p10/p50/p90 ending balance in today's $.
+- **Charts** — High-resolution PNG snapshots of every chart that's
+  currently on screen at export time: the deterministic projection,
+  annual contributions, spending need vs shortfall, Monte Carlo fan
+  (when MC has been run), and the multi-age sweep chart + heatmap
+  (when the sweep has been run). The first row of the sheet is an
+  italic note explaining that the images are a static point-in-time
+  capture — they will *not* update if you edit values elsewhere in the
+  workbook. Snapshots match the on-screen palette and zoom level.
 
 Each sheet has a coloured tab and a frozen header row to make
-navigation between sheets visually obvious. Charts on the *Summary*
-sheet reference the *Year-by-year* sheet directly so you can rebuild
-them in Excel without copy-pasting data.
+navigation between sheets visually obvious. The two charts on the
+*Summary* sheet are *native* Excel charts that reference the
+*Year-by-year* sheet directly, so you can edit the underlying data and
+the charts update. The *Charts* sheet, by contrast, holds static PNG
+images — useful for screenshots and printing, but they don't refresh
+when the data changes.
 
 **Export options modal.** When you've run Monte Carlo and click
 *Export to Excel*, a small modal appears so you can choose whether to
@@ -877,23 +888,31 @@ swapping the on-screen layout for a clean two-page summary. Pick
 *Save as PDF* in the print dialog destination to get a PDF you can email
 or archive.
 
-The print layout is intentionally compact:
+The print layout is intentionally compact but expands as needed when
+you've run additional analysis:
 
 - **Page 1** — Title block, headline KPIs (portfolio at retirement,
   ending balance, runs-out age) including any fresh Monte Carlo p5/p95
-  ranges, and a structured digest of every input value used for the
-  run (ages, inflation, salary, withdrawal mode, Social Security,
-  accounts).
-- **Page 2** — Condensed year-by-year table covering the full
+  ranges, a structured digest of every input value used for the run
+  (ages, inflation, salary, withdrawal mode, Social Security,
+  accounts), and the deterministic *Portfolio over time* projection
+  chart.
+- **Charts page** — A dedicated page collecting the rest of the
+  on-screen charts as embedded images: annual contributions, spending
+  need vs shortfall, Monte Carlo fan (when MC has been run), and the
+  multi-age sweep chart + heatmap (when the sweep has been run). Only
+  the charts that are actually rendered on screen at print time are
+  included, so the page sizes itself naturally to whatever analysis
+  you've completed.
+- **Year-by-year page(s)** — Condensed table covering the full
   projection. Zebra striping keeps the rows readable at print
   resolution.
 
-The dark theme is forced to light during printing so ink and contrast
-stay sensible, and the in-app sidebar, toolbar, and Monte Carlo
-controls are hidden. Closing the print dialog restores the normal
-layout. There is intentionally no third page — the digest on page 1 and
-the table on page 2 are designed to fit standard letter / A4 paper at
-default browser margins.
+The embedded chart images use the same palette and zoom level you see
+on screen, so the printed output matches the live view exactly. The
+dark theme is forced to light during printing so ink and contrast stay
+sensible, and the in-app sidebar, toolbar, and Monte Carlo controls
+are hidden. Closing the print dialog restores the normal layout.
 
 ## Data privacy
 

@@ -36,20 +36,30 @@ change without notice, and known issues are still being worked on.
   growth during accumulation
 - Charts: balance over time, annual contributions (per-account + total),
   spending need vs shortfall
-- **Excel export** — formatted `.xlsx` workbook with up to eight sheets
+- **Excel export** — formatted `.xlsx` workbook with up to nine sheets
   (Summary, Inputs, Accounts, Year-by-year, MC-Percentiles, MC-Trial-details,
-  Sweep) — frozen header rows, tab colours, embedded portfolio chart, and
-  an opt-in toggle for per-trial detail when Monte Carlo has been run
-- **Print / PDF** — clean two-page layout (KPIs + inputs digest on page 1,
-  condensed year-by-year table on page 2) that hides the app chrome and
-  forces a light theme so ink and contrast stay sensible
+  Sweep, Charts) — frozen header rows, tab colours, two native charts on the
+  *Summary* sheet that reference the *Year-by-year* data, and a dedicated
+  *Charts* sheet with high-resolution snapshots of the on-screen projection,
+  contributions, spending, Monte Carlo fan, and (when run) sweep + heatmap
+  charts. The snapshot images match the on-screen palette and zoom level; an
+  italic note at the top of the *Charts* sheet calls out that they are
+  point-in-time images and won't update if you edit the workbook
+- **Print / PDF** — clean multi-page layout that hides the app chrome and
+  forces a light theme so ink and contrast stay sensible. Page 1 carries
+  KPIs, inputs digest, and the projection chart; a dedicated chart page
+  follows with the contributions, spending, MC fan, multi-age sweep, and
+  heatmap snapshots (only the charts you've actually rendered are included);
+  the condensed year-by-year table closes the document
 - Side-by-side compare modal with up to three scenarios — KPI table,
   overlaid charts, and a live Monte Carlo summary row (success rate +
   median depletion age, computed in a Web Worker per slot)
 - Named scenario library (up to 20 entries, stored in your browser) for
   quickly switching between or comparing saved scenarios
 - In-app **user guide drawer** with topical clusters, scroll-spy TOC, and
-  per-control `?` info-tips that deep-link into the relevant section
+  per-control `?` info-tips that deep-link into the relevant section. The
+  inputs sidebar tooltips reposition to stay on-screen near the left edge
+  so the help text is never clipped
 
 A user guide is included in [USER_GUIDE.md](./USER_GUIDE.md).
 
