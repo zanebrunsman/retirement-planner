@@ -978,13 +978,3 @@ This list is the deliberate one. If something on it would block you
 from using the planner for a real decision, treat the result as
 indicative and verify with a licensed financial advisor.
 
-## Source code
-
-This planner is open-source. The full source code, including detailed
-comments explaining how each section works, is on GitHub:
-[zanebrunsman/retirement-planner](https://github.com/zanebrunsman/retirement-planner).
-
-The deployed site ships minified JavaScript without a visible source
-map, so the browser's DevTools Sources panel will show compiled output
-rather than the original TypeScript. The repo is the canonical place
-to read the well-commented source, browse history, or open an issue.
