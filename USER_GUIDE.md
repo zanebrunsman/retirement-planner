@@ -66,9 +66,12 @@ is exactly the sequence-of-returns risk you want to see before
 committing.
 
 **Sticky toolbar.** The top toolbar stays pinned while you scroll. From
-left to right: hide/show inputs, undo/redo, save/load scenario,
-save-to-library, scenario compare, print/PDF, Excel export, deep
-settings, theme toggle, reset menu, user guide. Editing inputs — undo
+left to right: hide/show inputs, undo/redo, **Save** (opens the
+scenario library in save mode — also exposes *Download as .json*),
+**Load** (opens the library in manage mode — also exposes
+*Upload .json…*), **Compare scenarios**, **Export** (drop-down with
+*Export to Excel…* and *Print / PDF*), theme toggle,
+⚙︎ gear (Deep settings), user guide, reset menu. Editing inputs — undo
 and redo work via the toolbar buttons or `Cmd/Ctrl+Z` /
 `Shift+Cmd/Ctrl+Z`; history goes back up to 50 edits and clears on reset.
 
@@ -656,24 +659,26 @@ difference side by side.
 
 ## Scenario library
 
-**Save to library / Saved scenarios** (toolbar) is an in-browser
-scenario library. *Save to library* lets you name the current scenario
-and store it locally; *Saved scenarios* opens the manage view where you
-can load, delete, or wipe entries. The library is capped at **20
-scenarios** (each ~2–4 KB) so it cannot balloon your browser storage.
-Saving the same name twice overwrites in place.
+**Save / Load** (toolbar) opens an in-browser scenario library. *Save*
+lets you name the current scenario and store it locally; *Load* opens
+the manage view where you can load, delete, or wipe entries. The
+library is capped at **20 scenarios** (each ~2–4 KB) so it cannot
+balloon your browser storage. Saving the same name twice overwrites in
+place.
 
 Saved scenarios live in this browser only — they don't sync across
 devices, and opening the planner in a different browser or on a
 different device starts you with an empty library. To move scenarios
-between devices, use *Save scenario (.json)* and *Load scenario*
-instead. The library is preserved by the regular *Reset to defaults*
+between devices, use the **Download as .json** button inside the Save
+modal, then **Upload .json…** inside the Load modal on the other
+device. The library is preserved by the regular *Reset to defaults*
 flow; only *Clear all data* (in the Reset menu) wipes it.
 
-For a full-fidelity, version-portable backup, use **Save scenario
-(.json)** in the toolbar — it downloads a single JSON file containing
-every input value (ages, inflation, accounts, ranks, etc.). Saved
-scenarios from older versions of the app are auto-migrated when loaded.
+For a full-fidelity, version-portable backup, use **Download as .json**
+from inside the Save modal — it downloads a single JSON file
+containing every input value (ages, inflation, accounts, ranks, etc.).
+Saved scenarios from older versions of the app are auto-migrated when
+loaded.
 
 ## KPIs
 
@@ -834,8 +839,9 @@ return model you trust.
 
 ## Excel export
 
-**Export to Excel** (toolbar) generates a formatted `.xlsx` workbook.
-The exact set of sheets depends on whether you've run Monte Carlo:
+**Export → Export to Excel…** (toolbar) generates a formatted `.xlsx`
+workbook. The exact set of sheets depends on whether you've run Monte
+Carlo:
 
 - **Summary** — Headline KPIs, scenario name, and the retirement-age
   rollup. Frozen header rows so the title block stays visible while you
@@ -870,11 +876,11 @@ the charts update. The *Charts* sheet, by contrast, holds static PNG
 images — useful for screenshots and printing, but they don't refresh
 when the data changes.
 
-**Export options modal.** When you've run Monte Carlo and click
-*Export to Excel*, a small modal appears so you can choose whether to
-include the optional *MC-Trial-details* sheet (large; useful for
-ad-hoc analysis). Without an MC result, the modal is skipped and the
-file downloads directly with the four base sheets.
+**Export options modal.** When you've run Monte Carlo and pick
+*Export to Excel…* from the Export menu, a small modal appears so you
+can choose whether to include the optional *MC-Trial-details* sheet
+(large; useful for ad-hoc analysis). Without an MC result, the modal
+is skipped and the file downloads directly with the four base sheets.
 
 **Currency.** The display currency you selected in the planner is used
 throughout the workbook; the planner is currency-agnostic and just
@@ -883,10 +889,10 @@ currencies.
 
 ## Print and PDF
 
-**Print / PDF** (toolbar) opens your browser's native print dialog after
-swapping the on-screen layout for a clean print-friendly summary. Pick
-*Save as PDF* in the print dialog destination to get a PDF you can email
-or archive.
+**Export → Print / PDF** (toolbar) opens your browser's native print
+dialog after swapping the on-screen layout for a clean print-friendly
+summary. Pick *Save as PDF* in the print dialog destination to get a
+PDF you can email or archive.
 
 The print layout is intentionally compact but expands as needed when
 you've run additional analysis:
@@ -931,9 +937,9 @@ and no analytics:
 - **Search engines.** The Pages deployment ships with a `noindex` meta
   tag so the live URL is excluded from search-engine indexes by default.
 
-To move scenarios between devices, use **Save scenario (.json)** and
-**Load scenario** in the toolbar — the file lives on your machine, you
-share it manually.
+To move scenarios between devices, use **Download as .json** inside
+the Save modal and **Upload .json…** inside the Load modal — the file
+lives on your machine, you share it manually.
 
 ## Limitations
 
