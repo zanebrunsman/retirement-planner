@@ -36,14 +36,20 @@ change without notice, and known issues are still being worked on.
   growth during accumulation
 - Charts: balance over time, annual contributions (per-account + total),
   spending need vs shortfall
-- Excel export of the full year-by-year projection
+- **Excel export** — formatted `.xlsx` workbook with up to eight sheets
+  (Summary, Inputs, Accounts, Year-by-year, MC-Percentiles, MC-Trial-details,
+  Sweep) — frozen header rows, tab colours, embedded portfolio chart, and
+  an opt-in toggle for per-trial detail when Monte Carlo has been run
+- **Print / PDF** — clean two-page layout (KPIs + inputs digest on page 1,
+  condensed year-by-year table on page 2) that hides the app chrome and
+  forces a light theme so ink and contrast stay sensible
 - Side-by-side compare modal with up to three scenarios — KPI table,
   overlaid charts, and a live Monte Carlo summary row (success rate +
   median depletion age, computed in a Web Worker per slot)
 - Named scenario library (up to 20 entries, stored in your browser) for
   quickly switching between or comparing saved scenarios
-- Print / PDF view that hides controls and prints the dashboard plus the
-  year-by-year table in a clean, paper-friendly layout
+- In-app **user guide drawer** with topical clusters, scroll-spy TOC, and
+  per-control `?` info-tips that deep-link into the relevant section
 
 A user guide is included in [USER_GUIDE.md](./USER_GUIDE.md).
 
