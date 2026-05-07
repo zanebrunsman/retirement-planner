@@ -469,16 +469,30 @@ ends, a new random start is picked. Block length defaults to 5 years;
 see *Block length* for tuning.
 
 **Account classification.** Each account is treated as **stock-like**
-(assumed return ≥ 6% real) or **bond-like** (< 6% real) based on its
-`growthPre` / `growthPost`. Stock-like accounts pull the year's S&P 500
-real return; bond-like accounts pull the 10-year Treasury real return.
-This sidesteps asking you to specify a per-account stock/bond split.
+(assumed return ≥ 6% real) or **bond-like** (< 6% real). The growth
+percentages you type in the sidebar are *nominal* (the same numbers a
+brokerage factsheet quotes — e.g. "S&P 500 has done about 10%
+annualized"). The bootstrap classifier converts each account's
+`growthPre` / `growthPost` from nominal to real internally using your
+*Annual inflation* assumption, then compares against the 6%-real cutoff.
+Stock-like accounts pull the year's S&P 500 real return; bond-like
+accounts pull the 10-year Treasury real return. This sidesteps asking
+you to specify a per-account stock/bond split.
+
+The nominal→real conversion uses the multiplicative form
+`(1 + nominal) / (1 + inflation) - 1`, not naive subtraction — so 10%
+nominal at 3% inflation works out to ~6.80% real (just over the
+stock-like floor), and 7% nominal at 3% inflation works out to ~3.88%
+real (clearly bond-like). If your inflation field is 0 or unset, the
+conversion is an identity and the classifier compares your typed
+percentage directly against the 6% floor.
 
 When bootstrap mode is selected, *Deep settings* shows an **Account
 classification (bootstrap mode)** block listing every enabled account
 with its assumed return and its resulting *stock-like* / *bond-like*
 label. To flip an account between the two series, edit its **Growth
-pre** value in the sidebar so it crosses the 6%-real cutoff.
+pre** value in the sidebar so it crosses the 6%-real cutoff (taking
+your inflation assumption into account).
 
 **Volatility inputs are ignored in bootstrap mode** — both the global
 pre/post sigmas next to the *Run* button and the per-account override
