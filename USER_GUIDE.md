@@ -75,6 +75,46 @@ scenario library in save mode — also exposes *Download as .json*),
 and redo work via the toolbar buttons or `Cmd/Ctrl+Z` /
 `Shift+Cmd/Ctrl+Z`; history goes back up to 50 edits and clears on reset.
 
+## Which mode should I pick?
+
+At the top of the sidebar there's a two-button **mode picker**: *Am I
+saving enough?* (Planner mode, default) and *Can my plan survive a
+crash?* (Stress-test mode). The two modes ask different questions of the
+same plan and answer them with different statistical machinery, so the
+answer to "which mode" is really "which question."
+
+**Planner mode — "Am I saving enough?"** This is the central-tendency
+view. Monte Carlo uses the lognormal i.i.d. return model and holds CPI
+at your typed *Annual inflation* every year. Use it to pick a savings
+rate, retirement age, or spending target — the percentile bands give you
+a clean picture of typical outcomes without the chaotic year-to-year
+shocks that bootstrap injects. This is also the right mode for sliding
+inputs around quickly, because the success rate is smooth and stable.
+
+**Stress-test mode — "Can my plan survive a crash?"** This is the
+downside view. Monte Carlo flips to historical-block bootstrap with
+drift correction *on*, and — new in B83 — each trial also bootstraps a
+per-year CPI series from the same 1928–2023 record (so a 1979-style
+double-digit inflation year hits spending growth and Social Security
+escalation just like it did in real life). Read the p5 of the percentile
+bands and the success-rate pill as *realistic worst-case outcomes*, not
+typical ones. Use this mode before committing to a real plan: stress
+success rates are typically 5–15 percentage points lower than planner
+mode for aggressive early-retirement scenarios, and that gap is exactly
+the sequence-of-returns + inflation risk you want to quantify.
+
+**Switching modes.** Clicking the other button opens a confirmation
+modal with three choices: *Cancel* (no change), *Switch only* (flip the
+mode flag without touching any other inputs — useful when you've already
+tuned bootstrap settings to taste), or *Apply defaults* (also reset the
+related Deep settings: return model, drift correction, and the
+recommended trial count). For most users, *Apply defaults* is the right
+choice. The active mode is shown as a chip above the KPI grid and in
+the printed summary header, so saved scenarios and PDFs always tell the
+reader which interpretation applies. The mode is persisted in the
+scenario JSON, the scenario library, and `localStorage`, so reopening
+a saved plan restores the same mode you last used.
+
 ## Ages and horizon
 
 **Current age** — Age you start the projection from. The first row in the
@@ -423,9 +463,13 @@ the result fresh because no underlying numeric input changes.
 according to the configured *Return model* (see below). Contributions,
 salary growth, employer match, withdrawal waterfall, Social Security,
 and inflation all run through the same engine as the deterministic
-projection — only the per-year per-account return is randomized.
-Inflation itself is held at the input value (not stochastic) so you're
-isolating market-return uncertainty.
+projection — only the per-year per-account return is randomized in
+planner mode. Inflation in planner mode is held at the input value (not
+stochastic) so you're isolating market-return uncertainty. **In
+stress-test mode (B83), inflation is also stochastic** — each trial
+bootstraps a per-year CPI from the same 1928–2023 record that drives
+spending growth and the Social Security COLA. See *Which mode should I
+pick?* and *Historical bootstrap → Per-year CPI in stress mode* below.
 
 ## Return models
 
@@ -509,6 +553,24 @@ growth rate is intentional — bootstrap is meant to expose what actually
 happened, not what was expected. If you'd rather align the long-run
 mean with your assumption while keeping the historical *shape*, see the
 next section.
+
+**Per-year CPI in stress mode (B83 / MC-5).** When you're in stress-test
+mode, each Monte Carlo trial also bootstraps a year-by-year CPI series
+from the same 1928–2023 record, riding the same block start as the
+stock and bond returns. So a trial that lands on the 1973–74 oil-shock
+block gets the 11.0% / 9.1% inflation those years actually delivered,
+and spending plus the Social Security COLA escalate at *that* rate for
+that year of the trial — not at your typed *Annual inflation*. This
+closed-loop combination of real-return shocks + matching CPI shocks is
+why stress mode catches plans that look bulletproof under a smooth 3%
+inflation assumption: the late-1970s scenario shrinks real spending power
+faster than a stock crash drains balances, and the two interact.
+Real-return shocks themselves are still applied to the portfolio (the
+dataset is already deflated by CPI — we don't double-count). Returns
+in planner mode and the deterministic projection both continue to use
+your scalar *Annual inflation* unchanged. The today's-$ chart axis
+always uses the scalar inflation so axes stay comparable across trials,
+even inside stress runs.
 
 ## Drift-corrected bootstrap
 
